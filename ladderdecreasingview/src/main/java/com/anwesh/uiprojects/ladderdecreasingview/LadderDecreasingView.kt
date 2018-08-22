@@ -18,7 +18,7 @@ fun Canvas.drawLDNode(i : Int, scale : Float, paint : Paint) {
     val w : Float = width.toFloat()
     val h : Float = height.toFloat()
     val hGap : Float = h / nodes
-    val yStep : Float = hGap * i + (h * 1.1f - hGap * i) * scale
+    val yStep : Float = hGap * i + (-h * 0.1f - hGap * i) * scale
     paint.color = Color.parseColor("#03A9F4")
     paint.strokeCap = Paint.Cap.ROUND
     save()
@@ -97,6 +97,47 @@ class LadderDecreasingView(ctx : Context) : View(ctx) {
             if (animated) {
                 animated = false
             }
+        }
+    }
+
+    data class LDNode(var i : Int, val state : State = State()) {
+        var next : LDNode? = null
+        var prev : LDNode? = null
+        init {
+            addNeighbor()
+        }
+
+        fun addNeighbor() {
+            if (i < nodes - 1) {
+                next = LDNode(i + 1)
+                next?.prev = this
+            }
+        }
+        fun draw(canvas : Canvas, paint : Paint) {
+            canvas.drawLDNode(i, state.scale, paint)
+            next?.draw(canvas, paint)
+        }
+
+        fun update(cb : (Int, Float) -> Unit) {
+            state.update {
+                cb(i, it)
+            }
+        }
+
+        fun startUpdating(cb : () -> Unit)   {
+            state.startUpdating(cb)
+        }
+
+        fun getNext(dir : Int, cb : () -> Unit) : LDNode {
+            var curr : LDNode? = prev
+            if (dir == 1) {
+                curr = next
+            }
+            if (curr != null) {
+                return curr
+            }
+            cb()
+            return this
         }
     }
 }
