@@ -30,7 +30,7 @@ fun Canvas.drawLDNode(i : Int, scale : Float, paint : Paint) {
     paint.strokeWidth = Math.min(w, h) / 60
     for (j in 0..1) {
         save()
-        translate(-hGap / 2 + hGap * j, hGap * i)
+        translate(-hGap / 2 + hGap * j, origY - hGap / 2)
         drawLine(0f, 0f, 0f,  hGap * (1 - scale), paint)
         restore()
     }
