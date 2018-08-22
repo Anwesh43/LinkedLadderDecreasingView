@@ -4,6 +4,7 @@ package com.anwesh.uiprojects.ladderdecreasingview
  * Created by anweshmishra on 23/08/18.
  */
 
+import android.app.Activity
 import android.view.View
 import android.view.MotionEvent
 import android.graphics.Paint
@@ -185,6 +186,14 @@ class LadderDecreasingView(ctx : Context) : View(ctx) {
             dl.startUpdating {
                 animator.start()
             }
+        }
+    }
+
+    companion object {
+        fun create(activity : Activity) : LadderDecreasingView {
+            val view : LadderDecreasingView = LadderDecreasingView(activity)
+            activity.setContentView(view)
+            return view
         }
     }
 }
