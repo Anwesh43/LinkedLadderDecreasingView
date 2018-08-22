@@ -18,7 +18,8 @@ fun Canvas.drawLDNode(i : Int, scale : Float, paint : Paint) {
     val w : Float = width.toFloat()
     val h : Float = height.toFloat()
     val hGap : Float = h / nodes
-    val yStep : Float = hGap * i + (-h * 0.1f - hGap * i) * scale
+    val origY : Float = h - (hGap * i + hGap / 2)
+    val yStep : Float = origY + (h * 1.1f - origY) * scale
     paint.color = Color.parseColor("#03A9F4")
     paint.strokeCap = Paint.Cap.ROUND
     save()
@@ -138,6 +139,28 @@ class LadderDecreasingView(ctx : Context) : View(ctx) {
             }
             cb()
             return this
+        }
+    }
+
+    data class DecreasingLadder(var i : Int) {
+        private var curr : LDNode = LDNode(0)
+        private var dir : Int = 1
+
+        fun update(cb : (Int, Float) -> Unit) {
+            curr.update {i, scl ->
+                curr = curr.getNext(dir) {
+                    dir *= -1
+                }
+                cb(i, scl)
+            }
+        }
+
+        fun startUpdating(cb : () -> Unit) {
+            curr.startUpdating(cb)
+        }
+
+        fun draw(canvas : Canvas, paint : Paint) {
+            curr.draw(canvas, paint)
         }
     }
 }
