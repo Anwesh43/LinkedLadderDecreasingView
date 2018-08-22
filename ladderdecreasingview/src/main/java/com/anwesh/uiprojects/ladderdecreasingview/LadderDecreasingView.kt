@@ -163,4 +163,26 @@ class LadderDecreasingView(ctx : Context) : View(ctx) {
             curr.draw(canvas, paint)
         }
     }
+
+    data class Renderer(var view : LadderDecreasingView) {
+
+        private val animator : Animator = Animator(view)
+        private val dl : DecreasingLadder = DecreasingLadder(0)
+
+        fun render(canvas : Canvas, paint : Paint) {
+            canvas.drawColor(Color.parseColor("#BDBDBD"))
+            dl.draw(canvas, paint)
+            animator.animate {
+                dl.update {i, scl ->
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            dl.startUpdating {
+                animator.start()
+            }
+        }
+    }
 }
