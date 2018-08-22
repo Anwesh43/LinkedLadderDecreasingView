@@ -9,8 +9,31 @@ import android.view.MotionEvent
 import android.graphics.Paint
 import android.graphics.Canvas
 import android.content.Context
+import android.graphics.Color
+import android.graphics.RectF
 
 val nodes : Int = 5
+
+fun Canvas.drawLDNode(i : Int, scale : Float, paint : Paint) {
+    val w : Float = width.toFloat()
+    val h : Float = height.toFloat()
+    val hGap : Float = h / nodes
+    val yStep : Float = hGap * i + (h * 1.1f - hGap * i) * scale
+    paint.color = Color.parseColor("#03A9F4")
+    paint.strokeCap = Paint.Cap.ROUND
+    save()
+    translate(w / 2, 0f)
+    paint.strokeWidth = Math.min(w, h) / 30
+    drawLine(-hGap / 2, yStep, hGap/2, yStep, paint)
+    paint.strokeWidth = Math.min(w, h) / 60
+    for (j in 0..1) {
+        save()
+        translate(-hGap / 2 + hGap * j, hGap * i)
+        drawLine(0f, 0f, 0f,  hGap * (1 - scale), paint)
+        restore()
+    }
+    restore()
+}
 
 class LadderDecreasingView(ctx : Context) : View(ctx) {
 
